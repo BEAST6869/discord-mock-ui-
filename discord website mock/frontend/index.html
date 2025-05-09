@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Discord UI Clone</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Sidebar (Servers) -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="discord.png" alt="Discord" />
+    </div>
+    <div class="server-list">
+      <button class="server-circle active" data-server="S1">S1</button>
+      <button class="server-circle" data-server="S2">S2</button>
+      <button class="server-circle" data-server="S3">S3</button>
+      <button class="server-circle" data-server="S4">S4</button>
+    </div>
+  </div>
+
+  <!-- Friends/DM Sidebar -->
+  <div class="dm-sidebar">
+    <h3>Direct Messages</h3>
+    <ul class="dm-list">
+      <li class="dm-item active">Alice</li>
+      <li class="dm-item">Bob</li>
+      <li class="dm-item">Charlie</li>
+      <li class="dm-item">Dave</li>
+    </ul>
+  </div>
+
+  <!-- Main Chat Area -->
+  <div class="main-content">
+    <div class="chat-header">
+      Welcome to the Mock Discord!
+    </div>
+    <div class="chat-window">
+      <p>Select a server to view the general chat.</p>
+    </div>
+  </div>
+
+  <!-- Feedback Button -->
+  <div class="feedback-button">
+    <button id="feedbackButton">Send Anonymous Feedback</button>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="modal">
+    <div class="modal-content">
+      <h2>Anonymous Feedback</h2>
+      <form id="feedback-form">
+        <input type="text" id="server" placeholder="Enter server name" required />
+        <textarea id="feedbackText" placeholder="Type your confession or feedback..." required></textarea>
+        <div>
+          <button type="submit">Submit</button>
+          <button type="button" id="closeModal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const feedbackButton = document.getElementById("feedbackButton");
+    const feedbackModal = document.getElementById("feedbackModal");
+    const closeModal = document.getElementById("closeModal");
+
+    feedbackButton.addEventListener("click", () => {
+        feedbackModal.style.display = "flex";
+    });
+
+    closeModal.addEventListener("click", () => {
+        feedbackModal.style.display = "none";
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === feedbackModal) {
+            feedbackModal.style.display = "none";
+        }
+    });
+
+    // Handle feedback form submission (no backend)
+    document.getElementById("feedback-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const server = document.getElementById("server").value.trim();
+      const feedback = document.getElementById("feedbackText").value.trim();
+
+      if (!feedback) {
+        alert("Please enter feedback.");
+        return;
+      }
+
+      // Simulate success
+      setTimeout(() => {
+        alert("Feedback submitted successfully (simulated)!");
+        feedbackModal.style.display = "none";
+        document.getElementById("feedbackText").value = "";
+        document.getElementById("server").value = "";
+      }, 500);
+    });
+
+    // Server click handler
+    const serverButtons = document.querySelectorAll('.server-circle');
+    const chatWindow = document.querySelector('.chat-window');
+
+    const generalChats = {
+      S1: [
+        "General Chat 1: Hello everyone!",
+        "General Chat 1: How's the weekend going?",
+        "General Chat 1: Any good shows to recommend?"
+      ],
+      S2: [
+        "General Chat 2: Welcome to the server!",
+        "General Chat 2: What do you all think of the new update?",
+        "General Chat 2: Who’s up for a game?"
+      ],
+      S3: [
+        "General Chat 3: Any fans of programming here?",
+        "General Chat 3: What's your favorite coding language?",
+        "General Chat 3: Anyone doing the hackathon?"
+      ],
+      S4: [
+        "General Chat 4: Is anyone here a gamer?",
+        "General Chat 4: What games are you all playing?",
+        "General Chat 4: Anyone want to play together?"
+      ]
+    };
+
+    serverButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        serverButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const selectedServer = btn.dataset.server;
+        const chatHeader = document.querySelector('.chat-header');
+        chatHeader.textContent = `General Chat - ${selectedServer}`;
+
+        const messages = generalChats[selectedServer] || ["Start your conversation here..."];
+        chatWindow.innerHTML = messages.map(msg => `<p>${msg}</p>`).join('');
+      });
+    });
+
+    // DM click handler
+    const dmItems = document.querySelectorAll('.dm-item');
+    const chatHeader = document.querySelector('.chat-header');
+
+    const fakeMessages = {
+      Alice: [
+        "Hey! How are you?",
+        "Are you joining the game night later?",
+        "Let me know if you need anything!"
+      ],
+      Bob: [
+        "Yo, did you check out that new anime?",
+        "It’s peak fiction fr.",
+        "Let’s VC tonight."
+      ],
+      Charlie: [
+        "Working on that project rn.",
+        "I'll ping you when done.",
+        "BTW, check the docs I sent."
+      ],
+      Dave: [
+        "Brooooooo 🤯",
+        "You won that argument HARD",
+        "Teach me your ways."
+      ]
+    };
+
+    dmItems.forEach(item => {
+      item.addEventListener('click', () => {
+        dmItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        const selectedUser = item.textContent;
+        chatHeader.textContent = `Chat with ${selectedUser}`;
+
+        const messages = fakeMessages[selectedUser] || ["Start your conversation here..."];
+        chatWindow.innerHTML = messages.map(msg => `<p>${msg}</p>`).join('');
+      });
+    });
+  </script>
+
+</body>
+</html>
